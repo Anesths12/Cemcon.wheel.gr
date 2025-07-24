@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Τροχός της Ενέργειας</title>
+  <style>
+    
+body {
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  color: #000000;
+  overflow: hidden; /* Αυτό καταργεί το scroll */
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 140px auto 0; /* Μείωσε το top margin */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 20px; /* Προσθήκη */
+}
+
+h1 {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.top-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0px;
+  margin-top: 10px; /* Προστέθηκε για επιπλέον κενό */
+}
+
+.game-area {
+  display: flex;
+  width: 100%;
+  gap: 30px;
+  margin-top: -10px; /* Προστέθηκε για κενό μεταξύ σκορ και τροχού */
+}
+
+.left-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.wheel-container {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  margin: 20px auto;
+}
+
+#wheel {
+  width: 100%;
+  height: 100%;
+  display: block; /* Προσθήκη αυτής της γραμμής */
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 40px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.wheel-pointer svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+}
+
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+button {
+  background-color: #14a9ce;
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 12px 25px;
+  font-size: 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+  .question-box {
+  background: rgba(10, 26, 97, 0.774) !important; /* Σκούρο μπλε με διαφάνεια */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 18px;
+    padding: 30px;
+    width: 100%;
+  box-shadow: 
+    0 0 20px rgba(0, 255, 255, 0.2),
+    inset 0 0 10px rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.4);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+ .question-text {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    text-align: center;
+  color: #fff !important; /* Λευκό κείμενο */
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5); /* Neon glow */
+    line-height: 1.5;
+  }
+
+  .choices-box {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .choice {
+  background: rgba(0, 15, 25, 0.8) !important;
+  border: 1px solid rgba(0, 255, 255, 0.3) !important;
+    color: #fff;
+    border-radius: 14px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  }
+
+
+ .choice:hover {
+    background: white;
+    border-color: rgba(52, 152, 219, 0.4);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4) !important;
+  transform: translateY(-3px) scale(1.02);
+  }
+
+  .choice-letter {
+  background: linear-gradient(135deg, #00ffaa, #0066ff) !important;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5) !important;
+  }
+
+   .result-box {
+    margin-top: 25px;
+    padding: 18px;
+    border-radius: 14px;
+    text-align: center;
+    font-size: 16px;
+    width: calc(100% - 36px); /* Αφαίρεσε το διπλάσιο του padding για να μην ξεπερνά */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: all 0.4s ease;
+    box-sizing: border-box; /* Προσθήκη - για να μετράει το padding μέσα στο width */
+    border: 1px solid transparent; /* Προσθήκη - αρχικό αόρατο περίγραμμα */
+  }
+
+  .correct {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid #27ae60 !important;
+    color: #27ae60;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3) !important;
+    margin-top: 25px; /* Προσθήκη για συνοχή */
+  }
+
+  .incorrect {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid #c0392b !important;
+    color: #c0392b;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3) !important;
+    margin-top: 25px; /* Προσθήκη για συνοχή */
+  }
+ .score-display {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  background: rgb(255, 255, 255) !important; 
+  backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 20px 35px;
+    border-radius: 16px;
+ box-shadow: 
+    0 0 15px rgb(0, 255, 255), /* Neon glow */
+    inset 0 0 10px rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.3); /* Κυανό περίγραμμα */
+    transition: all 0.4s ease-out;
+  }
+
+ .score-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+ .score-value {
+  background: linear-gradient(90deg, #00ffaa, #0066ff) !important; /* Gradient */
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5) !important;
+      animation: pulse 1.5s infinite alternate; /* Pulsing effect */
+    color: white;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    box-shadow: 
+      0 2px 10px rgba(40, 180, 135, 0.3),
+      inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    min-width: 24px;
+  }
+  @keyframes pulse {
+  from { opacity: 0.8; }
+  to { opacity: 1; box-shadow: 0 0 15px rgba(0, 255, 255, 0.8); }
+}
+
+.progress-container {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(0, 15, 25, 0.7);
+  border-radius: 10px;
+  margin: 10px 0;
+  height: 20px;
+  overflow: hidden;
+  box-shadow: 
+    0 0 5px rgba(0, 255, 255, 0.3),
+    inset 0 0 10px rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(0, 255, 170, 0.8), 
+    rgba(0, 102, 255, 0.8));
+  width: 0%;
+  transition: width 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.4), 
+    transparent);
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.modal.active .modal-content {
+  transform: scale(1);
+}
+
+.modal h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.modal p {
+  margin-bottom: 25px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+  font-size: 18px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-weight: bold;
+  font-size: 24px;
+  margin-top: 5px;
+}
+
+.success {
+  color: #2ecc71;
+}
+
+.failure {
+  color: #e74c3c;
+}
+body {
+  position: relative !important;
+}
+#background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  object-fit: cover;
+  opacity: 1;
+}
+
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  padding: 15px 30px;
+  border-radius: 1000px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  transition: all 0.3s ease;
+  position: fixed; /* Προσθήκη */
+  top: 1px; /* Προσθήκη - μικρή απόσταση από την κορυφή */
+  left: 50%; /* Προσθήκη */
+  transform: translateX(-50%); /* Προσθήκη - για κεντράρισμα */
+  overflow: hidden;
+  max-width: 80%; /* Αύξησε το πλάτος για καλύτερη εμφάνιση */
+  width: auto; /* Προσθήκη */
+  z-index: 1000; /* Προσθήκη - για να είναι πάνω από άλλα στοιχεία */
+  /* Αφαίρεσε το margin */
+}
+
+
+
+
+.company-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  letter-spacing: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.highlight {
+  background: linear-gradient(90deg, 
+    #00ff7f, 
+    #00e676, 
+    #00bfff, 
+    #0088ff, 
+    #00bfa5, 
+    #00ff7f); /* Προσθήκη περισσότερων χρωμάτων και επανάληψη */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 300% auto; /* Μεγαλύτερο background-size */
+  animation: gradientShift 8s ease-in-out infinite; /* Πιο αργή και ομαλή κίνηση */
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% center; }
+  100% { background-position: 100% center; } /* Αλλαγή από 200% σε 100% */
+}
+
+.subtitle {
+  font-size: 0.8em;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+  </style>
+</head>
+<body>
+
+<video autoplay muted loop id="background-video">
+  <source src="142936-781314490.mp4" type="video/mp4">
+</video>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+
+<header class="header" role="banner">
+  <h1 class="company-name">
+    <span class="highlight">ΚΟΥΣΚΟΥΡΙΔΗΣ</span>
+    <span class="subtitle">ΕΝΕΡΓΕΙΑΚΗ ΤΕΧΝΙΚΗ ΕΤΑΙΡΕΙΑ</span>
+  </h1>
+</header>
+
+  <div class="container">
+    <h1>Τροχός της Ενέργειας</h1>
+    
+    
+    <div class="top-section">
+      <div class="score-display" id="scoreDisplay">
+        <div class="score-item">Πόντοι: <span class="score-value" id="scoreValue">0</span></div>
+        <div class="score-item">Σωστές: <span class="score-value" id="correctValue">0</span>/3</div>
+        <div class="score-item">Λάθος: <span class="score-value" id="wrongValue">0</span>/5</div>
+      </div>
+      
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+    
+    <div class="game-area">
+<div class="left-section">
+  <div class="wheel-container" id="wheelContainer">
+    <canvas id="wheel" width="500" height="500"></canvas>
+  </div>
+  
+  <div class="controls">
+    <button id="spin">Γύρισμα Τροχού</button>
+  </div>
+</div>
+      <div class="right-section">
+        <div class="question-box" id="questionBox">
+          <p class="question-text">Πατήστε "Γύρισμα Τροχού" για να ξεκινήσει το παιχνίδι!</p>
+          <div class="choices-box" id="choicesBox"></div>
+          <div class="result-box" id="result"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Intro Modal -->
+  <div class="modal active" id="introModal">
+    <div class="modal-content">
+      <h2>Τροχός της Ενέργειας</h2>
+      <p>Γύρισε τον τροχό και απάντησε σωστά στις ερωτήσεις για να κερδίσεις!</p>
+      <p><strong>Κανόνες:</strong></p>
+      <ul style="text-align: left; margin-left: 20px;">
+        <li>Χρειάζεστε 3 σωστές απαντήσεις για να κερδίσετε</li>
+        <li>Με 5 λάθη χάνετε</li>
+        <li>Κάθε σωστή απάντηση: +10 πόντοι</li>
+        <li>Πρέπει να απαντήσετε την τρέχουσα ερώτηση πριν γυρίσετε ξανά τον τροχό</li>
+      </ul>
+      <button id="startBtn" style="margin-top: 20px;">Έναρξη Παιχνιδιού</button>
+    </div>
+  </div>
+  
+  <!-- Game Over Modal -->
+  <div class="modal" id="gameOverModal">
+    <div class="modal-content">
+      <h2 id="gameOverTitle">Τίτλος Αποτελέσματος</h2>
+      <div class="stats">
+        <div class="stat">
+          <div>Σωστές</div>
+          <div class="stat-value" id="correctAnswers">0</div>
+        </div>
+        <div class="stat">
+          <div>Λάθος</div>
+          <div class="stat-value" id="wrongAnswers">0</div>
+        </div>
+        <div class="stat">
+          <div>Πόντοι</div>
+          <div class="stat-value" id="finalScore">0</div>
+        </div>
+      </div>
+      <p id="gameOverMessage">Μήνυμα αποτελέσματος</p>
+      <button id="playAgainBtn">Παίξτε Ξανά</button>
+    </div>
+  </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    
+    // Game Elements
+    const canvas = document.getElementById("wheel");
+    const ctx = canvas.getContext("2d");
+    const size = canvas.width;
+    const center = size / 2;
+    let currentAngle = 0;
+    let isSpinning = false;
+    let isAnswered = true; // Start with true to allow first spin
+    let score = 0;
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+    let currentQuestionIndex = -1;
+
+    // DOM Elements
+    const spinBtn = document.getElementById('spin');
+    const questionBox = document.getElementById('questionBox');
+    let choicesBox = document.getElementById('choicesBox');
+    let resultBox = document.getElementById('result');
+    const scoreValue = document.getElementById('scoreValue');
+    const correctValue = document.getElementById('correctValue');
+    const wrongValue = document.getElementById('wrongValue');
+    const progressBar = document.getElementById('progressBar');
+    const introModal = document.getElementById('introModal');
+    const startBtn = document.getElementById('startBtn');
+    const gameOverModal = document.getElementById('gameOverModal');
+    const gameOverTitle = document.getElementById('gameOverTitle');
+    const gameOverMessage = document.getElementById('gameOverMessage');
+    const correctAnswersDisplay = document.getElementById('correctAnswers');
+    const wrongAnswersDisplay = document.getElementById('wrongAnswers');
+    const finalScoreDisplay = document.getElementById('finalScore');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    
+    // Questions Data
+     const questions = [
+        {
+          label: "Ανανεώσιμη Ενέργεια",
+          question: "Ποια ενέργεια είναι ανανεώσιμη;",
+          choices: ["Ηλιακή", "Πετρέλαιο", "Φυσικό αέριο", "Άνθρακας"],
+          correct: 0
+        },
+        {
+          label: "Εξοικονομώ",
+          question: "Τι κάνει το πρόγραμμα 'Εξοικονομώ';",
+          choices: ["Χρηματοδοτεί σπουδές", "Επιδοτεί ενεργειακές παρεμβάσεις κατοικιών", "Κατασκευάζει νέες πολυκατοικίες", "Παρέχει δωρεάν τρόφιμα"],
+          correct: 1
+        },
+        {
+          label: "Καθαρό Καύσιμο",
+          question: "Ποιο καύσιμο θεωρείται το πιο καθαρό για οικιακή χρήση;",
+          choices: ["Ξύλο", "Πετρέλαιο", "Φυσικό αέριο", "Κάρβουνο"],
+          correct: 2
+        },
+        {
+          label: "Εξοικονομώ 2",
+          question: "Ποια είναι μία βασική προϋπόθεση για να μπει κάποιος στο 'Εξοικονομώ';",
+          choices: ["Να έχει ιδιοκτησία κατοικίας", "Να μένει σε ενοίκιο", "Να εργάζεται σε δημόσιο", "Να έχει αυτοκίνητο"],
+          correct: 0
+        },
+        {
+          label: "Εξοικονόμηση Ενέργειας",
+          question: "Ποια επιλογή βοηθά περισσότερο στην εξοικονόμηση ενέργειας;",
+          choices: ["Χρήση στεγνωτηρίου ρούχων", "Μαγείρεμα με γκάζι", "Αντικατάσταση λαμπτήρων με LED", "Άνοιγμα παραθύρων το χειμώνα"],
+          correct: 2
+        },
+        {
+          label: "Λέβητας",
+          question: "Ποια τεχνολογία μειώνει τη χρήση λέβητα πετρελαίου;",
+          choices: ["Θερμαντικά σώματα", "Ηλιακός θερμοσίφωνας", "Αντλία θερμότητας", "Φούρνος μικροκυμάτων"],
+          correct: 2
+        },
+        {
+          label: "Φωτοβολταϊκά",
+          question: "Ποιο είναι το βασικό πλεονέκτημα των φωτοβολταϊκών;",
+          choices: ["Παράγουν ζεστό νερό", "Παράγουν ηλεκτρική ενέργεια από τον ήλιο", "Καθαρίζουν τον αέρα", "Ρυθμίζουν τη θερμοκρασία του σπιτιού"],
+          correct: 1
+        },
+        {
+          label: "Θερμομόνωση",
+          question: "Ποιο υλικό χρησιμοποιείται συχνά για θερμομόνωση τοίχων;",
+          choices: ["Σκυρόδεμα", "Πολυουρεθάνη", "Αλουμίνιο", "Μολύβι"],
+          correct: 1
+        }
+      ];
+      // ... (keep the rest of your questions array the same)
+    ;
+
+    // Show intro modal on load
+    window.addEventListener('load', () => {
+      introModal.classList.add('active');
+    });
+
+    // Start game button
+    startBtn.addEventListener('click', () => {
+      introModal.classList.remove('active');
+      drawWheel();
+      updateScore();
+    });
+
+    // Play again button
+    playAgainBtn.addEventListener('click', () => {
+      gameOverModal.classList.remove('active');
+      resetGame();
+    });
+
+    function resetGame() {
+      score = 0;
+      correctAnswers = 0;
+      wrongAnswers = 0;
+      currentAngle = 0;
+      currentQuestionIndex = -1;
+      isAnswered = true;
+      
+      // Επαναφορά του UI
+      resultBox.textContent = '';
+      resultBox.className = 'result-box';
+      choicesBox.innerHTML = '';
+      
+      const questionTextEl = questionBox.querySelector('.question-text');
+      if (questionTextEl) {
+        questionTextEl.textContent = 'Πατήστε "Γύρισμα Τροχού" για να ξεκινήσει το παιχνίδι!';
+      }
+      
+      spinBtn.disabled = false;
+      updateScore();
+      drawWheel();
+    }
+
+    // Draw the wheel with segments
+    function drawWheel() {
+      const sliceAngle = 2 * Math.PI / questions.length;
+      const borderWidth = 5;
+      const innerRadius = 30;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+      
+      // Draw each slice
+      questions.forEach((q, i) => {
+        const angle = i * sliceAngle + currentAngle;
+        
+        
+        // Draw slice with gradient
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, center - borderWidth, angle, angle + sliceAngle);
+        ctx.closePath();
+        
+        const gradient = ctx.createLinearGradient(
+          center + Math.cos(angle + sliceAngle/2) * center,
+          center + Math.sin(angle + sliceAngle/2) * center,
+          center,
+          center
+        );
+        gradient.addColorStop(0, getSliceColor(i, 1));
+        gradient.addColorStop(1, getSliceColor(i, 0.7));
+        
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        
+        // Add slice border
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = borderWidth;
+        ctx.stroke();
+        
+        // Add inner border
+        ctx.beginPath();
+        ctx.arc(center, center, innerRadius + borderWidth/2, angle, angle + sliceAngle);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        // Draw text
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(angle + sliceAngle / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "white";
+        ctx.font = "bold 14px 'Roboto'";
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
+        
+        // Adjust text position based on slice size
+        const textRadius = center - 50;
+        const textX = textRadius * Math.cos(0);
+        const textY = textRadius * Math.sin(0) + 5;
+        
+        ctx.fillText(q.label, textX, textY);
+        ctx.restore();
+      });
+      
+      // Draw center circle with gradient
+      ctx.beginPath();
+      ctx.arc(center, center, innerRadius, 0, 2 * Math.PI);
+      const centerGradient = ctx.createRadialGradient(
+        center, center, innerRadius * 0.3,
+        center, center, innerRadius
+      );
+      centerGradient.addColorStop(0, '#2c3e50');
+      centerGradient.addColorStop(1, '#34495e');
+      ctx.fillStyle = centerGradient;
+      ctx.fill();
+      
+      // Add center border
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      
+      // Add metallic effect
+      ctx.beginPath();
+      ctx.arc(center, center, innerRadius * 0.7, 0, Math.PI);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      drawPointer();
+    }
+
+    // Get color for each slice with optional brightness adjustment
+    function getSliceColor(index, brightness = 1) {
+      const colors = [
+        `hsl(0, ${85*brightness}%, ${60*brightness}%)`,    // Red
+        `hsl(210, ${80*brightness}%, ${60*brightness}%)`,  // Blue
+        `hsl(40, ${100*brightness}%, ${65*brightness}%)`,  // Yellow
+        `hsl(170, ${70*brightness}%, ${50*brightness}%)`,  // Teal
+        `hsl(270, ${70*brightness}%, ${65*brightness}%)`,  // Purple
+        `hsl(20, ${100*brightness}%, ${65*brightness}%)`,  // Orange
+        `hsl(120, ${60*brightness}%, ${55*brightness}%)`,  // Green
+        `hsl(330, ${70*brightness}%, ${65*brightness}%)`   // Pink
+      ];
+      return colors[index % colors.length];
+    }
+
+    // Spin the wheel
+    function spinWheel() {
+      if (isSpinning || !isAnswered) return;
+      
+      isSpinning = true;
+      isAnswered = false;
+      spinBtn.disabled = true;
+      resultBox.textContent = '';
+      resultBox.className = 'result-box';
+      choicesBox.innerHTML = '';
+      
+      const questionTextEl = questionBox.querySelector('.question-text');
+      if (questionTextEl) {
+        questionTextEl.textContent = 'Γυρίζει ο τροχός...';
+      }
+      
+      // Select random question (ensuring it's not the same as last time)
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * questions.length);
+      } while (newIndex === currentQuestionIndex && questions.length > 1);
+      
+      currentQuestionIndex = newIndex;
+      const anglePerSlice = 2 * Math.PI / questions.length;
+      const sliceMiddleOffset = anglePerSlice / 2;
+      
+      // Calculate target angle (pointing to the selected question at the top)
+      const targetAngle = (3 * Math.PI / 2) - (currentQuestionIndex * anglePerSlice + sliceMiddleOffset);
+      const fullSpins = 5 * 2 * Math.PI;
+      const finalAngle = fullSpins + targetAngle;
+      
+      // Animation
+      let start = null;
+      function animate(timestamp) {
+        if (!start) start = timestamp;
+        const progress = timestamp - start;
+        const duration = 4000;
+        const ease = t => 1 - Math.pow(1 - t, 4); // More dramatic easing
+        const t = Math.min(progress / duration, 1);
+        currentAngle = ease(t) * finalAngle;
+        drawWheel();
+
+        if (t < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          currentAngle = targetAngle % (2 * Math.PI);
+          drawWheel();
+          showQuestion(currentQuestionIndex);
+          isSpinning = false;
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function showQuestion(index) {
+      const q = questions[index];
+      
+      // Δημιουργία HTML για τις επιλογές
+      let html = '';
+      q.choices.forEach((choice, i) => {
+        html += `
+          <div class="choice" onclick="checkAnswer(${index}, ${i})">
+            <div class="choice-letter">${String.fromCharCode(65 + i)}</div>
+            ${choice}
+          </div>
+        `;
+      });
+      
+      // Ενημέρωση του UI
+      const questionTextEl = questionBox.querySelector('.question-text');
+      if (questionTextEl) {
+        questionTextEl.textContent = q.question;
+      }
+      
+      choicesBox.innerHTML = html;
+      resultBox.textContent = '';
+      resultBox.className = 'result-box';
+    }
+
+    // Check if answer is correct
+    function checkAnswer(qIndex, answerIndex) {
+  const correct = questions[qIndex].correct;
+  
+  if (answerIndex === correct) {
+    resultBox.textContent = "✅ Σωστή απάντηση!";
+    resultBox.className = "result-box correct";
+    score += 10;
+    correctAnswers++;
+    launchConfetti();
+  } else {
+    resultBox.innerHTML = `❌ Λάθος απάντηση. Η σωστή απάντηση είναι: <strong>${questions[qIndex].choices[correct]}</strong>`;
+    resultBox.className = "result-box incorrect";
+    wrongAnswers++;
+  }
+
+  // Disable choices after answer
+  const choices = document.querySelectorAll('.choice');
+  choices.forEach(choice => {
+    choice.style.pointerEvents = 'none';
+    const choiceText = choice.textContent.trim();
+    const correctChoiceText = questions[qIndex].choices[correct].trim();
+    
+    if (choiceText.includes(correctChoiceText)) {
+      choice.style.borderColor = '#2ecc71';
+      choice.style.backgroundColor = 'rgba(46, 204, 113, 0.1)';
+    }
+  });
+
+  updateScore();
+
+  setTimeout(() => {
+    checkGameStatus();
+    if (correctAnswers < 3 && wrongAnswers < 5) {
+      prepareForNextSpin();
+    }
+  }, 3000);
+}
+
+    function prepareForNextSpin() {
+      isAnswered = true;
+      spinBtn.disabled = false;
+      resultBox.textContent = '';
+      resultBox.className = 'result-box';
+      choicesBox.innerHTML = '';
+      
+      const questionTextEl = questionBox.querySelector('.question-text');
+      if (questionTextEl) {
+        questionTextEl.textContent = 'Πατήστε "Γύρισμα Τροχού" για επόμενη ερώτηση';
+      }
+    }
+
+    // Check if game is won or lost
+    function checkGameStatus() {
+      if (correctAnswers >= 3) {
+        showGameOver(true);
+      } else if (wrongAnswers >= 5) {
+        showGameOver(false);
+      }
+    }
+
+    // Show game over modal
+    function showGameOver(isWin) {
+      if (isWin) {
+        gameOverTitle.textContent = "Συγχαρητήρια! Κερδίσατε!";
+        gameOverTitle.className = "success";
+        gameOverMessage.textContent = "Πέτυχες 3 σωστές απαντήσεις και κέρδισες το παιχνίδι!";
+        launchConfetti(true);
+      } else {
+        gameOverTitle.textContent = "Τέλος Παιχνιδιού";
+        gameOverTitle.className = "failure";
+        gameOverMessage.textContent = "Έφτασες τα 5 λάθη. Δοκίμασε ξανά!";
+      }
+      
+      correctAnswersDisplay.textContent = correctAnswers;
+      wrongAnswersDisplay.textContent = wrongAnswers;
+      finalScoreDisplay.textContent = score;
+      
+      gameOverModal.classList.add('active');
+    }
+
+    // Update score display
+    function updateScore() {
+      scoreValue.textContent = score;
+      correctValue.textContent = correctAnswers;
+      wrongValue.textContent = wrongAnswers;
+      
+      // Update progress bar
+      const progress = Math.min((correctAnswers / 3) * 100, 100);
+      progressBar.style.width = `${progress}%`;
+      
+      // Disable spin button if current question isn't answered
+      spinBtn.disabled = !isAnswered || isSpinning;
+    }
+
+    // Confetti effect
+    function launchConfetti(isBig = false) {
+      const duration = isBig ? 300 : 300;           //το 1 ειναι για το τελος (χρονικη διάρκεια) το 2 στην αρχη//
+      const particleCount = isBig ? 50 : 50;            // το πληθος τον comfetti στο τελος //
+      const spread = isBig ? 100 : 55;
+      const end = Date.now() + duration;
+      const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+      
+      (function frame() {
+        confetti({
+          particleCount: isBig ? particleCount/3 : particleCount/6,
+          angle: 60,
+          spread: spread,
+          origin: { x: 0 },
+          colors: colors,
+          scalar: isBig ? 1.5 : 1
+        });
+        confetti({
+          particleCount: isBig ? particleCount/3 : particleCount/6,
+          angle: 120,
+          spread: spread,
+          origin: { x: 1 },
+          colors: colors,
+          scalar: isBig ? 1.5 : 1
+        });
+        
+        if (isBig) {
+          confetti({
+            particleCount: particleCount/3,
+            spread: 360,
+            origin: { y: 0.6 },
+            colors: colors,
+            scalar: 1.2
+          });
+        }
+        
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+    }
+
+    // Initialize game
+    spinBtn.addEventListener('click', spinWheel);
+    drawWheel();
+    
+function drawPointer() {
+  const pointerHeight = 40;
+  const pointerWidth = 30;
+  
+  ctx.save();
+  ctx.translate(center, center);
+  
+  // Σχεδιάζουμε τον δείκτη προς τα ΚΕΝΤΡΟ (από την άκρη προς τα μέσα)
+  ctx.beginPath();
+  ctx.moveTo(0, -center + 5); // 5 pixels κάτω από την κορυφή
+  ctx.lineTo(pointerWidth/2, -center + 5); // Κατευθείαν προς τα πλάγια (όχι προς τα κάτω)
+  ctx.lineTo(0, -center + pointerHeight + 5); // Τώρα το σημείο βάσης είναι προς τα κάτω
+  ctx.lineTo(-pointerWidth/2, -center + 5); // Κατευθείαν προς τα πλάγια (όχι προς τα κάτω)
+  ctx.closePath();
+  
+  ctx.fillStyle = '#e74c3c';
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  ctx.shadowBlur = 5;
+  ctx.shadowOffsetY = 2;
+  
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+}
+
+
+
+    // Make checkAnswer available globally for the inline onclick handlers
+    window.checkAnswer = checkAnswer;
+  </script>
+
+</body>
+</html>
